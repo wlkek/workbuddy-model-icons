@@ -4,7 +4,7 @@
  * 只读 DOM，不联网、不改配置。 */
 (function () {
   'use strict';
-  var VERSION = '1.3.0';
+  var VERSION = '1.4.0';
   if (window.__WB_MODEL_ICONS__ === VERSION) return;
   window.__WB_MODEL_ICONS__ = VERSION;
 
@@ -25,6 +25,40 @@
   }
 
   var ATTR = 'data-wbm-icon';
+
+  /* 安全上色：绝不删除/替换 React 的节点。
+   * 旧写法 `host.innerHTML = svg` 会把 React 自己的子节点销毁，
+   * React 下次更新时找不到要删的节点 → "Failed to execute 'removeChild'"。
+   * 现在：隐藏 React 的子节点 + 追加一个我们自己的 span。 */
+  function paint(host, name) {
+    var svg = pick(name);
+    if (!svg) return false;
+
+    var mine = null;
+    for (var i = 0; i < host.children.length; i++) {
+      var c0 = host.children[i];
+      if (c0.classList && c0.classList.contains('wb-brand-icon')) { mine = c0; break; }
+    }
+
+    for (var j = 0; j < host.children.length; j++) {
+      var c = host.children[j];
+      if (c === mine) continue;
+      if (c.style && c.style.display !== 'none') c.style.display = 'none';
+    }
+
+    if (!mine) {
+      mine = document.createElement('span');
+      mine.className = 'wb-brand-icon';
+      mine.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;';
+      host.appendChild(mine);
+    }
+
+    if (host.getAttribute(ATTR) !== name) {
+      mine.innerHTML = svg;          /* 只改自己的节点 */
+      host.setAttribute(ATTR, name);
+    }
+    return true;
+  }
 
   function apply() {
     /* 主列表用 cr-model-selector__item；分组子菜单用的是 data-testid="model-group-option-<id>" */
@@ -47,12 +81,8 @@
         if (tid) name = tid.replace('model-group-option-', '');
       }
       if (!name || !iconEl) continue;
-      var svg = pick(name);
-      if (!svg) continue;
       if (iconEl.getAttribute(ATTR) === name) continue;
-      iconEl.setAttribute(ATTR, name);
-      iconEl.style.background = 'none';
-      iconEl.innerHTML = svg;
+      paint(iconEl, name);
     }
   }
 
@@ -86,8 +116,7 @@
       var svg = pick(name);
       if (!svg) continue;
       if (iconEl.getAttribute(ATTR) === name) continue;
-      iconEl.setAttribute(ATTR, name);
-      iconEl.innerHTML = svg;
+      paint(iconEl, name);
     }
   }
 
