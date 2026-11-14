@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>wb-model-icons fixture</title>
+<style>
+  body { background:#1b1b1f; color:#e6e6e6; font:14px/1.5 "Segoe UI","Microsoft YaHei",sans-serif; padding:24px; }
+  h2 { font-size:12px; color:#888; letter-spacing:.08em; text-transform:uppercase; margin:24px 0 8px; }
+  .cr-model-selector__list { width:280px; background:#232329; border-radius:10px; padding:6px; }
+  .cr-model-selector__item { display:flex; align-items:center; height:32px; padding:0 8px; border-radius:8px; gap:8px; cursor:pointer; }
+  .cr-model-selector__item:hover { background:#2c2c34; }
+  .cr-model-selector__item-icon { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; color:#888; }
+  .cr-model-selector__item-name { flex:1; }
+  .cr-model-selector__trigger {
+    display:inline-flex; align-items:center; gap:6px; padding:6px 10px;
+    background:#232329; border:1px solid #333; border-radius:8px; cursor:pointer;
+  }
+  .cr-model-selector__trigger-icon { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; color:#888; }
+  .cr-model-selector__trigger-label { font-size:12px; }
+  #result { margin-top:20px; font-size:12px; color:#7ee787; }
+</style>
+</head>
+<body>
+  <h2>模型列表</h2>
+  <div class="cr-model-selector__list">
+    <div class="cr-model-selector__item"><span class="cr-model-selector__item-icon"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></span><span class="cr-model-selector__item-name">Kimi K2.5</span></div>
+    <div class="cr-model-selector__item"><span class="cr-model-selector__item-icon"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></span><span class="cr-model-selector__item-name">DeepSeek V4.1</span></div>
+    <div class="cr-model-selector__item"><span class="cr-model-selector__item-icon"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></span><span class="cr-model-selector__item-name">GLM-5</span></div>
+    <div class="cr-model-selector__item"><span class="cr-model-selector__item-icon"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></span><span class="cr-model-selector__item-name">本地实验模型</span></div>
+  </div>
+
+  <h2>输入框的当前模型胶囊</h2>
+  <button class="cr-model-selector__trigger">
+    <span class="cr-model-selector__trigger-icon"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></span>
+    <span class="cr-model-selector__trigger-label">DeepSeek V4.1</span>
+  </button>
+
+  <div id="result">waiting…</div>
+
+  <script src="../src/wb-model-icons.js"></script>
+  <script>
+    setTimeout(function () {
+      var n = document.querySelectorAll('.wb-brand-icon').length;
+      var hidden = document.querySelectorAll('.cr-model-selector__item-icon > :not(.wb-brand-icon)[style*="display: none"]').length;
+      document.getElementById('result').textContent =
+        'brand_icons=' + n + ' hidden_originals=' + hidden;
+      document.title = 'brand_icons=' + n;
+    }, 600);
+  </script>
+</body>
+</html>
